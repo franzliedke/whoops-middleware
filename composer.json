@@ -6,6 +6,7 @@
         }
     },
     "require": {
+        "filp/whoops": "^1.1",
         "zendframework/zend-diactoros": "^1.1@dev"
     }
 }
