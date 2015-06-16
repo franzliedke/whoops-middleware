@@ -1,0 +1,11 @@
+{
+    "name": "franzl/whoops-middleware",
+    "autoload": {
+        "psr-4": {
+            "Franzl\\Middleware\\Whoops\\": "src/"
+        }
+    },
+    "require": {
+        "zendframework/zend-diactoros": "^1.1@dev"
+    }
+}
