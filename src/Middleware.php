@@ -7,9 +7,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 use Zend\Diactoros\Response\StringResponse;
-use Zend\Stratigility\ErrorMiddlewareInterface;
 
-class Middleware implements ErrorMiddlewareInterface
+class Middleware
 {
     /**
      * {@inheritdoc}
