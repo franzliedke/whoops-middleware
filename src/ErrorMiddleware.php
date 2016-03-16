@@ -12,6 +12,6 @@ class ErrorMiddleware
 {
     public function __invoke($error, Request $request, Response $response, callable $out)
     {
-        return WhoopsRunner::handle($error);
+        return WhoopsRunner::handle($error, $request);
     }
 }
