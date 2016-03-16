@@ -5,12 +5,12 @@ namespace Franzl\Middleware\Whoops;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Middleware returns the client preferred format.
+ * Detect any of the supported preferred formats from a HTTP request
  */
 class FormatNegotiator
 {
     /**
-     * @var array Available formats with the mime types
+     * @var array Available formats with MIME types
      */
     private static $formats = [
         'html' => ['text/html', 'application/xhtml+xml'],
@@ -20,42 +20,33 @@ class FormatNegotiator
     ];
 
     /**
-     * Returns the format.
+     * Returns the preferred format based on the Accept header
      *
      * @param ServerRequestInterface $request
-     *
-     * @return string|null
+     * @return string
      */
-    public static function getFormat(ServerRequestInterface $request)
+    public static function getPreferredFormat(ServerRequestInterface $request)
     {
-        $default = 'html';
+        $acceptTypes = $request->getHeader('accept');
 
-        $acceptType = $request->getHeader("accept");
-        // Accept header is usually an array
-        if (is_array($acceptType) && count($acceptType) > 0){
-            $acceptType = $acceptType[0];
+        if (count($acceptTypes) > 0) {
+            $acceptType = $acceptTypes[0];
 
-            // As many format may match for a given accept header, trying to determine the one that "hits" the most
+            // As many formats may match for a given Accept header, let's try to find the one that fits the best
             $counters = [];
-            foreach (self::$formats as $format => $values){
-                foreach ($values as $value){
-                    if (strpos($acceptType, $value) !== false){
-                        if (!isset($counters[$format])){
-                            $counters[$format] = 0;
-                        }
-                        $counters[$format] ++;
-                    }
+            foreach (self::$formats as $format => $values) {
+                foreach ($values as $value) {
+                    $counters[$format] = isset($counters[$format]) ? $counters[$format] : 0;
+                    $counters[$format] += intval(strpos($acceptType, $value) !== false);
                 }
             }
-        }
-        // Sort the array to retrieve the format that best matches the Accept header
-        if (count($counters) > 0){
-            asort($counters);
-            $counters = array_reverse($counters);
-            return array_keys($counters)[0];
-        }else{
-            return $default;
-        }
-    }
 
+            // Sort the array to retrieve the format that best matches the Accept header
+            asort($counters);
+            end($counters);
+            return key($counters);
+        }
+
+        return 'html';
+    }
 }
