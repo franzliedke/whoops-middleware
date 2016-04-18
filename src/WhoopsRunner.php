@@ -17,6 +17,10 @@ class WhoopsRunner
         $method = Run::EXCEPTION_HANDLER;
 
         $whoops = self::getWhoopsInstance($request);
+
+        // Output is managed by the middleware pipeline
+        $whoops->allowQuit(false);
+        
         ob_start();
         $whoops->$method($error);
         $response = ob_get_clean();
