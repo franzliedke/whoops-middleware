@@ -8,7 +8,7 @@ use Whoops\Handler\PlainTextHandler;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Handler\XmlResponseHandler;
 use Whoops\Run;
-use Zend\Diactoros\Response\StringResponse;
+use Zend\Diactoros\Response\HtmlResponse;
 
 class WhoopsRunner
 {
@@ -25,7 +25,7 @@ class WhoopsRunner
         $whoops->$method($error);
         $response = ob_get_clean();
 
-        return StringResponse::html($response, 500);
+        return new HtmlResponse($response, 500);
     }
 
     private static function getWhoopsInstance(ServerRequestInterface $request)
