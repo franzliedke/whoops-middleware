@@ -2,15 +2,18 @@
 
 namespace Franzl\Middleware\Whoops\Test;
 
-use Franzl\Middleware\Whoops\FormatNegotiator;
+use Franzl\Middleware\Whoops\Insides\FormatNegotiator;
 use Zend\Diactoros\ServerRequest;
 
 class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var FormatNegotiator */
+    private $formatNegotiator;
+
     public function test_requests_without_accept_header_returns_html()
     {
         $request = new ServerRequest;
-        $format = FormatNegotiator::getPreferredFormat($request);
+        $format = $this->formatNegotiator->getPreferredFormat($request);
 
         $this->assertEquals('html', $format);
     }
@@ -20,11 +23,18 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
      */
     public function test_known_mimetypes_will_return_preferred_format($mimeType, $expectedFormat)
     {
-        $format = FormatNegotiator::getPreferredFormat(
+        $format = $this->formatNegotiator->getPreferredFormat(
             $this->makeRequestWithAccept($mimeType)
         );
 
         $this->assertEquals($expectedFormat, $format);
+    }
+
+    private function makeRequestWithAccept($acceptHeader)
+    {
+        $request = new ServerRequest;
+
+        return $request->withHeader('accept', $acceptHeader);
     }
 
     public function knownTypes()
@@ -42,10 +52,8 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function makeRequestWithAccept($acceptHeader)
+    protected function setUp()
     {
-        $request = new ServerRequest;
-
-        return $request->withHeader('accept', $acceptHeader);
+        $this->formatNegotiator = new FormatNegotiator();
     }
 }

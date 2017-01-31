@@ -2,16 +2,34 @@
 
 namespace Franzl\Middleware\Whoops;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Franzl\Middleware\Whoops\Insides\AbstractMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * ErrorMiddleware class for use with Zend's Stratigility middleware pipe
  */
-class ErrorMiddleware
+class ErrorMiddleware extends AbstractMiddleware
 {
+
+    /**
+     * @return ErrorMiddleware
+     */
+    public static function createNewInstance()
+    {
+        return new ErrorMiddleware(WhoopsRunner::createNewInstance());
+    }
+
+    /**
+     * @param $error
+     * @param Request $request
+     * @param Response $response
+     * @param callable $out
+     * @return \Zend\Diactoros\Response\HtmlResponse
+     */
     public function __invoke($error, Request $request, Response $response, callable $out)
     {
-        return WhoopsRunner::handle($error, $request);
+        return $this->whoopsRun->handle($error, $request);
     }
+
 }

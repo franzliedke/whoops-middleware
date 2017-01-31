@@ -1,6 +1,6 @@
 <?php
 
-namespace Franzl\Middleware\Whoops;
+namespace Franzl\Middleware\Whoops\Insides;
 
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -25,7 +25,7 @@ class FormatNegotiator
      * @param ServerRequestInterface $request
      * @return string
      */
-    public static function getPreferredFormat(ServerRequestInterface $request)
+    public function getPreferredFormat(ServerRequestInterface $request)
     {
         $acceptTypes = $request->getHeader('accept');
 

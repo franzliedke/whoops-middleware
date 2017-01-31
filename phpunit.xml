@@ -11,6 +11,11 @@
          syntaxCheck="false"
          verbose="true"
 >
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
     <testsuites>
         <testsuite name="whoops-middleware Test Suite">
             <directory suffix=".php">./tests/</directory>
