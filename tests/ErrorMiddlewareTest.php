@@ -22,7 +22,7 @@ class ErrorMiddlewareTest extends \PHPUnit_Framework_TestCase
     /** @var ErrorMiddleware */
     private $errorMiddleware;
 
-    public function testCreateNewInstance()
+    public function testNewInstance()
     {
         $this->assertInstanceOf(ErrorMiddleware::class, ErrorMiddleware::newInstance());
     }

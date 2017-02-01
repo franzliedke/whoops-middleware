@@ -22,12 +22,19 @@ class WhoopsRunFactoryTest extends \PHPUnit_Framework_TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject|ServerRequestInterface */
     private $serverRequest;
 
-    public function testCreateNewInstance()
+    protected function setUp()
+    {
+        $this->cliDetector = $this->getMockBuilder(CliDetector::class)->getMock();
+        $this->formatNegotiator = $this->getMockBuilder(FormatNegotiator::class)->getMock();
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+    }
+
+    public function testNewInstance()
     {
         $this->assertInstanceOf(WhoopsRunFactory::class, WhoopsRunFactory::newInstance());
     }
 
-    public function testCreateInstanceCli()
+    public function testGetWhoopsInstanceCli()
     {
         // configure mocks
         $this->cliDetector->method('isCli')->willReturn(true);
@@ -38,7 +45,7 @@ class WhoopsRunFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(PlainTextHandler::class, $run->getHandlers()[0]);
     }
 
-    public function testCreateInstanceJson()
+    public function testGetWhoopsInstanceJson()
     {
         // configure mocks
         $this->cliDetector->method('isCli')->willReturn(false);
@@ -53,7 +60,7 @@ class WhoopsRunFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(JsonResponseHandler::class, $run->getHandlers()[0]);
     }
 
-    public function testCreateInstanceHtml()
+    public function testGetWhoopsInstanceHtml()
     {
         // configure mocks
         $this->cliDetector->method('isCli')->willReturn(false);
@@ -68,7 +75,7 @@ class WhoopsRunFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(PrettyPageHandler::class, $run->getHandlers()[0]);
     }
 
-    public function testCreateInstanceXml()
+    public function testGetWhoopsInstanceXml()
     {
         // configure mocks
         $this->cliDetector->method('isCli')->willReturn(false);
@@ -83,7 +90,7 @@ class WhoopsRunFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(XmlResponseHandler::class, $run->getHandlers()[0]);
     }
 
-    public function testCreateInstanceText()
+    public function testGetWhoopsInstanceText()
     {
         // configure mocks
         $this->cliDetector->method('isCli')->willReturn(false);
@@ -98,7 +105,7 @@ class WhoopsRunFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(PlainTextHandler::class, $run->getHandlers()[0]);
     }
 
-    public function testCreateInstanceDefaultEmpty()
+    public function testGetWhoopsInstanceDefaultEmpty()
     {
         // configure mocks
         $this->cliDetector->method('isCli')->willReturn(false);
@@ -113,7 +120,7 @@ class WhoopsRunFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(PrettyPageHandler::class, $run->getHandlers()[0]);
     }
 
-    public function testCreateInstanceDefault()
+    public function testGetWhoopsInstanceDefault()
     {
         // configure mocks
         $this->cliDetector->method('isCli')->willReturn(false);
@@ -126,13 +133,6 @@ class WhoopsRunFactoryTest extends \PHPUnit_Framework_TestCase
         $run = (new WhoopsRunFactory($this->cliDetector, $this->formatNegotiator))->getWhoopsInstance($this->serverRequest);
         $this->assertInstanceOf(Run::class, $run);
         $this->assertInstanceOf(PlainTextHandler::class, $run->getHandlers()[0]);
-    }
-
-    protected function setUp()
-    {
-        $this->cliDetector = $this->getMockBuilder(CliDetector::class)->getMock();
-        $this->formatNegotiator = $this->getMockBuilder(FormatNegotiator::class)->getMock();
-        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
     }
 
 }
