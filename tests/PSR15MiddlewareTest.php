@@ -10,7 +10,6 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class PSR15MiddlewareTest extends \PHPUnit_Framework_TestCase
 {
-
     /** @var \PHPUnit_Framework_MockObject_MockObject|DelegateInterface */
     private $delegate;
     /** @var \PHPUnit_Framework_MockObject_MockObject|ServerRequestInterface */
@@ -25,23 +24,22 @@ class PSR15MiddlewareTest extends \PHPUnit_Framework_TestCase
         $this->middleware = new PSR15Middleware();
         $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
         $this->delegate = $this->getMockBuilder(DelegateInterface::class)->setMethods(['process'])->getMock();
-        $this->response = $this->getMockBuilder(ResponseInterface::class)->setMethods(
-            [
-                'getStatusCode',
-                'withStatus',
-                'getReasonPhrase',
-                'getProtocolVersion',
-                'withProtocolVersion',
-                'getHeaders',
-                'hasHeader',
-                'getHeader',
-                'getHeaderLine',
-                'withHeader',
-                'withAddedHeader',
-                'withoutHeader',
-                'getBody',
-                'withBody'
-            ])->getMock();
+        $this->response = $this->getMockBuilder(ResponseInterface::class)->setMethods([
+            'getStatusCode',
+            'withStatus',
+            'getReasonPhrase',
+            'getProtocolVersion',
+            'withProtocolVersion',
+            'getHeaders',
+            'hasHeader',
+            'getHeader',
+            'getHeaderLine',
+            'withHeader',
+            'withAddedHeader',
+            'withoutHeader',
+            'getBody',
+            'withBody'
+        ])->getMock();
     }
 
     public function testProcess()

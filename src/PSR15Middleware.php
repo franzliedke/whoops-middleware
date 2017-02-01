@@ -12,7 +12,6 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class PSR15Middleware implements MiddlewareInterface
 {
-
     /**
      * @param ServerRequestInterface $request
      * @param DelegateInterface $delegate
