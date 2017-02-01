@@ -13,14 +13,6 @@ class ErrorMiddleware extends AbstractMiddleware
 {
 
     /**
-     * @return ErrorMiddleware
-     */
-    public static function createNewInstance()
-    {
-        return new ErrorMiddleware(WhoopsRunner::createNewInstance());
-    }
-
-    /**
      * @param $error
      * @param Request $request
      * @param Response $response

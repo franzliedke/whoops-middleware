@@ -13,14 +13,6 @@ class Middleware extends AbstractMiddleware
 {
 
     /**
-     * @return Middleware
-     */
-    public static function createNewInstance()
-    {
-        return new Middleware(WhoopsRunner::createNewInstance());
-    }
-
-    /**
      * @param Request $request
      * @param Response $response
      * @param callable|null $next
