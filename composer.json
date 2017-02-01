@@ -1,5 +1,6 @@
 {
   "name": "franzl/whoops-middleware",
+  "license": "MIT",
   "autoload": {
     "psr-4": {
       "Franzl\\Middleware\\Whoops\\": "src/"
