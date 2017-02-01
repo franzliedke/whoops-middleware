@@ -24,7 +24,7 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateNewInstance()
     {
-        $this->assertInstanceOf(Middleware::class, Middleware::createNewInstance());
+        $this->assertInstanceOf(Middleware::class, Middleware::newInstance());
     }
 
     public function testInvoke()

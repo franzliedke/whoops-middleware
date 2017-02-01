@@ -29,7 +29,7 @@ class WhoopsRunFactory implements WhoopsRunFactoryInterface
     /**
      * @return WhoopsRunFactory
      */
-    public static function createNewInstance()
+    public static function newInstance()
     {
         return new WhoopsRunFactory(new CliDetector(), new FormatNegotiator());
     }

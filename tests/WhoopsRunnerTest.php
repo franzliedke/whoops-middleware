@@ -12,7 +12,7 @@ class WhoopsRunnerTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateNewInstance()
     {
-        $this->assertInstanceOf(WhoopsRunner::class, WhoopsRunner::createNewInstance());
+        $this->assertInstanceOf(WhoopsRunner::class, WhoopsRunner::newInstance());
     }
 
     public function testHandle()

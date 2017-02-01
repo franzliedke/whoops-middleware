@@ -24,7 +24,7 @@ class WhoopsRunFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateNewInstance()
     {
-        $this->assertInstanceOf(WhoopsRunFactory::class, WhoopsRunFactory::createNewInstance());
+        $this->assertInstanceOf(WhoopsRunFactory::class, WhoopsRunFactory::newInstance());
     }
 
     public function testCreateInstanceCli()

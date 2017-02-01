@@ -24,7 +24,7 @@ class ErrorMiddlewareTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateNewInstance()
     {
-        $this->assertInstanceOf(ErrorMiddleware::class, ErrorMiddleware::createNewInstance());
+        $this->assertInstanceOf(ErrorMiddleware::class, ErrorMiddleware::newInstance());
     }
 
     public function testInvoke()

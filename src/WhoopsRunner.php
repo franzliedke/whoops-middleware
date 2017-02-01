@@ -23,9 +23,9 @@ class WhoopsRunner
     /**
      * @return WhoopsRunner
      */
-    public static function createNewInstance()
+    public static function newInstance()
     {
-        return new WhoopsRunner(WhoopsRunFactory::createNewInstance());
+        return new WhoopsRunner(WhoopsRunFactory::newInstance());
     }
 
     /**

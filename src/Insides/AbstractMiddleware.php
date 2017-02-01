@@ -21,9 +21,9 @@ abstract class AbstractMiddleware
     /**
      * @return AbstractMiddleware
      */
-    public static function createNewInstance()
+    public static function newInstance()
     {
-        return new static(WhoopsRunner::createNewInstance());
+        return new static(WhoopsRunner::newInstance());
     }
 
 }
