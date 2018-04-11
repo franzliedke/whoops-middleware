@@ -4,13 +4,13 @@ namespace Franzl\Middleware\Whoops;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Server\MiddlewareInterface as Middleware;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 
 /**
- * Middleware class for PSR-15 middleware
+ * Middleware class for using Whoops with a PSR-15 middleware stack
  */
-class PSR15Middleware implements Middleware
+class WhoopsMiddleware implements MiddlewareInterface
 {
     /**
      * Process an incoming server request and return a response, optionally

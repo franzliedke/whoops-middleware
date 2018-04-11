@@ -3,13 +3,13 @@
 namespace Franzl\Middleware\Whoops\Test;
 
 use Exception;
-use Franzl\Middleware\Whoops\PSR15Middleware;
+use Franzl\Middleware\Whoops\WhoopsMiddleware;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class PSR15MiddlewareTest extends TestCase
+class WhoopsMiddlewareTest extends TestCase
 {
     /** @var \PHPUnit_Framework_MockObject_MockObject|RequestHandlerInterface */
     private $handler;
@@ -17,12 +17,12 @@ class PSR15MiddlewareTest extends TestCase
     private $serverRequest;
     /** @var \PHPUnit_Framework_MockObject_MockObject|ResponseInterface */
     private $response;
-    /** @var PSR15Middleware */
+    /** @var WhoopsMiddleware */
     private $middleware;
 
     protected function setUp()
     {
-        $this->middleware = new PSR15Middleware();
+        $this->middleware = new WhoopsMiddleware;
         $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
         $this->handler = $this->getMockBuilder(RequestHandlerInterface::class)->setMethods(['handle'])->getMock();
         $this->response = $this->getMockBuilder(ResponseInterface::class)->setMethods([
