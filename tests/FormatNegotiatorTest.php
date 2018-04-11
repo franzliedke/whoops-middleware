@@ -3,9 +3,10 @@
 namespace Franzl\Middleware\Whoops\Test;
 
 use Franzl\Middleware\Whoops\FormatNegotiator;
+use PHPUnit\Framework\TestCase;
 use Zend\Diactoros\ServerRequest;
 
-class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
+class FormatNegotiatorTest extends TestCase
 {
     public function test_requests_without_accept_header_returns_html()
     {

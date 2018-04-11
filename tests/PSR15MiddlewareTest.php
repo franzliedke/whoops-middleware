@@ -5,10 +5,11 @@ namespace Franzl\Middleware\Whoops\Test;
 use Exception;
 use Franzl\Middleware\Whoops\PSR15Middleware;
 use Interop\Http\ServerMiddleware\DelegateInterface;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class PSR15MiddlewareTest extends \PHPUnit_Framework_TestCase
+class PSR15MiddlewareTest extends TestCase
 {
     /** @var \PHPUnit_Framework_MockObject_MockObject|DelegateInterface */
     private $delegate;
