@@ -11,7 +11,7 @@
     "zendframework/zend-diactoros": "^1.1.0"
   },
   "suggest": {
-    "http-interop/http-middleware": "In case you want to use PSR 15 middleware"
+    "psr/http-server-middleware": "In case you want to use PSR 15 middleware"
   },
   "autoload-dev": {
     "psr-4": {
@@ -20,6 +20,6 @@
   },
   "require-dev": {
     "phpunit/phpunit": "7.0.*",
-    "http-interop/http-middleware": "^0.4.1"
+    "psr/http-server-middleware": "^1.0"
   }
 }

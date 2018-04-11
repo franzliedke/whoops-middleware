@@ -2,26 +2,24 @@
 
 namespace Franzl\Middleware\Whoops;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\MiddlewareInterface as Middleware;
+use Psr\Http\Server\RequestHandlerInterface as Handler;
 
 /**
  * Middleware class for PSR-15 middleware
  */
-class PSR15Middleware implements MiddlewareInterface
+class PSR15Middleware implements Middleware
 {
     /**
-     * @param ServerRequestInterface $request
-     * @param DelegateInterface $delegate
-     *
-     * @return ResponseInterface
+     * Process an incoming server request and return a response, optionally
+     * delegating response creation to a handler.
      */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(Request $request, Handler $handler): Response
     {
         try {
-            return $delegate->process($request);
+            return $handler->handle($request);
         } catch (\Exception $e) {
             return WhoopsRunner::handle($e, $request);
         }

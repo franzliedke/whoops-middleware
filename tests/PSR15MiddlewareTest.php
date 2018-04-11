@@ -4,15 +4,15 @@ namespace Franzl\Middleware\Whoops\Test;
 
 use Exception;
 use Franzl\Middleware\Whoops\PSR15Middleware;
-use Interop\Http\ServerMiddleware\DelegateInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class PSR15MiddlewareTest extends TestCase
 {
-    /** @var \PHPUnit_Framework_MockObject_MockObject|DelegateInterface */
-    private $delegate;
+    /** @var \PHPUnit_Framework_MockObject_MockObject|RequestHandlerInterface */
+    private $handler;
     /** @var \PHPUnit_Framework_MockObject_MockObject|ServerRequestInterface */
     private $serverRequest;
     /** @var \PHPUnit_Framework_MockObject_MockObject|ResponseInterface */
@@ -24,7 +24,7 @@ class PSR15MiddlewareTest extends TestCase
     {
         $this->middleware = new PSR15Middleware();
         $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
-        $this->delegate = $this->getMockBuilder(DelegateInterface::class)->setMethods(['process'])->getMock();
+        $this->handler = $this->getMockBuilder(RequestHandlerInterface::class)->setMethods(['handle'])->getMock();
         $this->response = $this->getMockBuilder(ResponseInterface::class)->setMethods([
             'getStatusCode',
             'withStatus',
@@ -47,9 +47,9 @@ class PSR15MiddlewareTest extends TestCase
     {
         $this->response->method('getStatusCode')->willReturn(200);
         $this->response->method('getBody')->willReturn('Success!');
-        $this->delegate->method('process')->willReturn($this->response);
+        $this->handler->method('handle')->willReturn($this->response);
 
-        $response = $this->middleware->process($this->serverRequest, $this->delegate);
+        $response = $this->middleware->process($this->serverRequest, $this->handler);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('Success!', $response->getBody());
@@ -57,9 +57,9 @@ class PSR15MiddlewareTest extends TestCase
 
     public function testProcessWithException()
     {
-        $this->delegate->method('process')->willThrowException(new Exception());
+        $this->handler->method('handle')->willThrowException(new Exception());
 
-        $response = $this->middleware->process($this->serverRequest, $this->delegate);
+        $response = $this->middleware->process($this->serverRequest, $this->handler);
 
         $this->assertEquals(500, $response->getStatusCode());
     }
