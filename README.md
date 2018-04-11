@@ -1,6 +1,6 @@
-# PSR-7 middleware for Whoops
+# PSR-15 middleware for Whoops
 
-A PSR-7 compatible middleware for [Whoops](https://github.com/filp/whoops), the fantastic pretty error handler for PHP.
+A PSR-15 compatible middleware for [Whoops](https://github.com/filp/whoops), the fantastic pretty error handler for PHP.
 
 ## Installation
 
@@ -10,20 +10,27 @@ You can install the library using Composer:
 
 ## Usage
 
-### Zend Stratigility
+Assuming you are using a PSR-15 compatible middleware dispatcher (such as [zend-stratigility](https://github.com/zendframework/zend-stratigility), [Relay](http://relayphp.com/2.x), or [broker](https://github.com/northwoods/broker)), all you need to do is add the middleware class to your pipeline / broker / dispatcher ...
 
-If you're using Zend's Stratigility middleware pipe, you need to use the special error middleware to be able to handle exceptions:
+This might look as follows:
 
-~~~php
-$app->pipe(new \Franzl\Middleware\Whoops\ErrorMiddleware);
-~~~
+### Stratigility
 
-(You should probably do this at the end of your middleware stack, so that errors cannot be handled elsewhere.)
+```php
+$pipe->pipe(new \Franzl\Middleware\Whoops\WhoopsMiddleware)
+```
 
-### Relay and others
+### Relay
 
-Add the standard middleware to the queue:
+```php
+$queue = [];
+// ...
+$queue[] = new \Franzl\Middleware\Whoops\WhoopsMiddleware;
+$relay = new Relay($queue);
+```
 
-~~~php
-$queue[] = new \Franzl\Middleware\Whoops\Middleware;
-~~~
+### broker
+
+```php
+$broker->always(\Franzl\Middleware\Whoops\WhoopsMiddleware::class)
+```
