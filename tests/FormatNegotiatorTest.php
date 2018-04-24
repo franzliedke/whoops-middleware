@@ -28,6 +28,24 @@ class FormatNegotiatorTest extends TestCase
         $this->assertEquals($expectedFormat, $format);
     }
 
+    public function test_multiple_mimetypes_will_prefer_the_first_match()
+    {
+        $format = FormatNegotiator::getPreferredFormat(
+            $this->makeRequestWithAccept('application/xml, application/json')
+        );
+
+        $this->assertEquals('xml', $format);
+    }
+
+    public function test_unknown_mimetypes_will_fall_back_to_plain_text()
+    {
+        $format = FormatNegotiator::getPreferredFormat(
+            $this->makeRequestWithAccept('foo/bar, x/custom')
+        );
+
+        $this->assertEquals('txt', $format);
+    }
+
     public function knownTypes()
     {
         return [
