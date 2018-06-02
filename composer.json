@@ -1,5 +1,6 @@
 {
   "name": "franzl/whoops-middleware",
+  "description": "PSR-15 compatible middleware for Whoops, the pretty error handler",
   "license": "MIT",
   "autoload": {
     "psr-4": {
