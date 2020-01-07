@@ -25,7 +25,8 @@ class WhoopsRunner
         $whoops->$method($error);
         $response = ob_get_clean();
 
-        return new HtmlResponse($response, 500);
+        $contentType = FormatNegotiator::getPreferredContentType($request);
+        return new HtmlResponse($response, 500, ['Content-Type' => $contentType]);
     }
 
     private static function getWhoopsInstance(ServerRequestInterface $request)

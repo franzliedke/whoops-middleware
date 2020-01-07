@@ -32,6 +32,40 @@ class WhoopsMiddlewareTest extends TestCase
         );
 
         $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals('text/html', $response->getHeaderLine('content-type'));
+    }
+
+    public function testProcessWithExceptionWhenRequestWantsJson()
+    {
+        $response = (new WhoopsMiddleware)->process(
+            (new ServerRequest)->withHeader('Accept', 'application/json'),
+            $this->handlerThatThrowsException()
+        );
+
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals('application/json', $response->getHeaderLine('content-type'));
+    }
+
+    public function testProcessWithExceptionWhenRequestWantsPlainText()
+    {
+        $response = (new WhoopsMiddleware)->process(
+            (new ServerRequest)->withHeader('Accept', 'text/plain'),
+            $this->handlerThatThrowsException()
+        );
+
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals('text/plain', $response->getHeaderLine('content-type'));
+    }
+
+    public function testProcessWithExceptionWhenRequestWantsXml()
+    {
+        $response = (new WhoopsMiddleware)->process(
+            (new ServerRequest)->withHeader('Accept', 'application/xml'),
+            $this->handlerThatThrowsException()
+        );
+
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals('text/xml', $response->getHeaderLine('content-type'));
     }
 
     private function handlerThatReturns(ResponseInterface $response)

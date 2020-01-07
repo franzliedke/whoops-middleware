@@ -49,4 +49,10 @@ class FormatNegotiator
 
         return 'html';
     }
+
+    public static function getPreferredContentType(ServerRequestInterface $request)
+    {
+        $format = self::getPreferredFormat($request);
+        return self::$formats[$format][0];
+    }
 }
