@@ -13,7 +13,7 @@ use Zend\Diactoros\ServerRequest;
 
 class WhoopsMiddlewareTest extends TestCase
 {
-    public function testProcessSuccessfulRequest()
+    public function test_successful_request_is_left_untouched()
     {
         $response = (new WhoopsMiddleware)->process(
             new ServerRequest,
@@ -24,7 +24,7 @@ class WhoopsMiddlewareTest extends TestCase
         $this->assertEquals('Success!', $response->getBody());
     }
 
-    public function testProcessException()
+    public function test_exception_is_handled()
     {
         $response = (new WhoopsMiddleware)->process(
             new ServerRequest,
