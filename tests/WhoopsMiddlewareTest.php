@@ -13,7 +13,7 @@ use Zend\Diactoros\ServerRequest;
 
 class WhoopsMiddlewareTest extends TestCase
 {
-    public function testProcess()
+    public function testProcessSuccessfulRequest()
     {
         $response = (new WhoopsMiddleware)->process(
             new ServerRequest,
@@ -24,7 +24,7 @@ class WhoopsMiddlewareTest extends TestCase
         $this->assertEquals('Success!', $response->getBody());
     }
 
-    public function testProcessWithException()
+    public function testProcessException()
     {
         $response = (new WhoopsMiddleware)->process(
             new ServerRequest,
@@ -35,37 +35,53 @@ class WhoopsMiddlewareTest extends TestCase
         $this->assertEquals('text/html', $response->getHeaderLine('content-type'));
     }
 
-    public function testProcessWithExceptionWhenRequestWantsJson()
+    /**
+     * @dataProvider knownTypes
+     */
+    public function test_known_mime_types_will_return_preferred_content_type($mime, $expectedContentType)
     {
         $response = (new WhoopsMiddleware)->process(
-            (new ServerRequest)->withHeader('Accept', 'application/json'),
+            $this->requestWithAccept($mime),
             $this->handlerThatThrowsException()
         );
 
         $this->assertEquals(500, $response->getStatusCode());
-        $this->assertEquals('application/json', $response->getHeaderLine('content-type'));
+        $this->assertEquals($expectedContentType, $response->getHeaderLine('content-type'));
     }
 
-    public function testProcessWithExceptionWhenRequestWantsPlainText()
+    public function knownTypes()
     {
-        $response = (new WhoopsMiddleware)->process(
-            (new ServerRequest)->withHeader('Accept', 'text/plain'),
-            $this->handlerThatThrowsException()
-        );
-
-        $this->assertEquals(500, $response->getStatusCode());
-        $this->assertEquals('text/plain', $response->getHeaderLine('content-type'));
+        yield ['text/html', 'text/html'];
+        yield ['application/xhtml+xml', 'text/html'];
+        yield ['application/json', 'application/json'];
+        yield ['text/json', 'application/json'];
+        yield ['application/x-json', 'application/json'];
+        yield ['text/xml', 'text/xml'];
+        yield ['application/xml', 'text/xml'];
+        yield ['application/x-xml', 'text/xml'];
+        yield ['text/plain', 'text/plain'];
     }
 
-    public function testProcessWithExceptionWhenRequestWantsXml()
+    public function test_multiple_mime_types_will_prefer_the_first_match()
     {
         $response = (new WhoopsMiddleware)->process(
-            (new ServerRequest)->withHeader('Accept', 'application/xml'),
+            $this->requestWithAccept('application/xml, application/json'),
             $this->handlerThatThrowsException()
         );
 
         $this->assertEquals(500, $response->getStatusCode());
         $this->assertEquals('text/xml', $response->getHeaderLine('content-type'));
+    }
+
+    public function test_unknown_mime_types_will_fall_back_to_plain_text()
+    {
+        $response = (new WhoopsMiddleware)->process(
+            $this->requestWithAccept('foo/bar, x/custom'),
+            $this->handlerThatThrowsException()
+        );
+
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals('text/plain', $response->getHeaderLine('content-type'));
     }
 
     private function handlerThatReturns(ResponseInterface $response)
@@ -87,5 +103,10 @@ class WhoopsMiddlewareTest extends TestCase
                 throw new Exception;
             }
         };
+    }
+
+    private function requestWithAccept($acceptHeader)
+    {
+        return (new ServerRequest)->withHeader('accept', $acceptHeader);
     }
 }
