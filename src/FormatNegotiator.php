@@ -33,22 +33,29 @@ class FormatNegotiator
             $acceptType = $acceptTypes[0];
 
             // As many formats may match for a given Accept header, let's try to find the one that fits the best
-            $counters = [];
+            // We do this by storing the best (i.e. earliest) match for each type.
+            $memo = [];
             foreach (self::$formats as $format) {
                 foreach ($format::MIMES as $value) {
-                    $counters[$format] = isset($counters[$format]) ? $counters[$format] : 0;
-                    $counters[$format] += intval(strpos($acceptType, $value) !== false);
+                    if (! isset($memo[$format])) {
+                        $memo[$format] = PHP_INT_MAX;
+                    }
+
+                    $match = strpos($acceptType, $value);
+                    if ($match !== false) {
+                        $memo[$format] = min($match, $memo[$format]);
+                    }
                 }
             }
 
             // Sort the array to retrieve the format that best matches the Accept header
-            asort($counters);
-            end($counters);
+            asort($memo);
+            reset($memo);
 
-            if (current($counters) == 0) {
+            if (current($memo) == PHP_INT_MAX) {
                 return new Formats\PlainText;
             } else {
-                $class = key($counters);
+                $class = key($memo);
                 return new $class;
             }
         }

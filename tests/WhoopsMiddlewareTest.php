@@ -71,6 +71,15 @@ class WhoopsMiddlewareTest extends TestCase
 
         $this->assertEquals(500, $response->getStatusCode());
         $this->assertEquals('text/xml', $response->getHeaderLine('content-type'));
+
+        // Test vice versa to avoid false positives
+        $response = (new WhoopsMiddleware)->process(
+            $this->requestWithAccept('application/json, application/xml'),
+            $this->handlerThatThrowsException()
+        );
+
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals('application/json', $response->getHeaderLine('content-type'));
     }
 
     public function test_unknown_mime_types_will_fall_back_to_plain_text()
