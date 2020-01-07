@@ -8,48 +8,17 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Zend\Diactoros\Response\TextResponse;
+use Zend\Diactoros\ServerRequest;
 
 class WhoopsMiddlewareTest extends TestCase
 {
-    /** @var \PHPUnit_Framework_MockObject_MockObject|RequestHandlerInterface */
-    private $handler;
-    /** @var \PHPUnit_Framework_MockObject_MockObject|ServerRequestInterface */
-    private $serverRequest;
-    /** @var \PHPUnit_Framework_MockObject_MockObject|ResponseInterface */
-    private $response;
-    /** @var WhoopsMiddleware */
-    private $middleware;
-
-    protected function setUp()
-    {
-        $this->middleware = new WhoopsMiddleware;
-        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
-        $this->handler = $this->getMockBuilder(RequestHandlerInterface::class)->setMethods(['handle'])->getMock();
-        $this->response = $this->getMockBuilder(ResponseInterface::class)->setMethods([
-            'getStatusCode',
-            'withStatus',
-            'getReasonPhrase',
-            'getProtocolVersion',
-            'withProtocolVersion',
-            'getHeaders',
-            'hasHeader',
-            'getHeader',
-            'getHeaderLine',
-            'withHeader',
-            'withAddedHeader',
-            'withoutHeader',
-            'getBody',
-            'withBody'
-        ])->getMock();
-    }
-
     public function testProcess()
     {
-        $this->response->method('getStatusCode')->willReturn(200);
-        $this->response->method('getBody')->willReturn('Success!');
-        $this->handler->method('handle')->willReturn($this->response);
-
-        $response = $this->middleware->process($this->serverRequest, $this->handler);
+        $response = (new WhoopsMiddleware)->process(
+            new ServerRequest,
+            $this->handlerThatReturns(new TextResponse('Success!'))
+        );
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('Success!', $response->getBody());
@@ -57,10 +26,32 @@ class WhoopsMiddlewareTest extends TestCase
 
     public function testProcessWithException()
     {
-        $this->handler->method('handle')->willThrowException(new Exception());
-
-        $response = $this->middleware->process($this->serverRequest, $this->handler);
+        $response = (new WhoopsMiddleware)->process(
+            new ServerRequest,
+            $this->handlerThatThrowsException()
+        );
 
         $this->assertEquals(500, $response->getStatusCode());
+    }
+
+    private function handlerThatReturns(ResponseInterface $response)
+    {
+        return new class($response) implements RequestHandlerInterface {
+            public function __construct($response) {
+                $this->response = $response;
+            }
+            public function handle(ServerRequestInterface $request): ResponseInterface {
+                return $this->response;
+            }
+        };
+    }
+
+    private function handlerThatThrowsException()
+    {
+        return new class implements RequestHandlerInterface {
+            public function handle(ServerRequestInterface $request): ResponseInterface {
+                throw new Exception;
+            }
+        };
     }
 }
