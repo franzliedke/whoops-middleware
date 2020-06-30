@@ -2,10 +2,10 @@
 
 namespace Franzl\Middleware\Whoops;
 
+use Middlewares\Utils\Factory;
 use Psr\Http\Message\ServerRequestInterface;
 use Whoops\Handler\PlainTextHandler;
 use Whoops\Run;
-use Zend\Diactoros\Response\HtmlResponse;
 
 class WhoopsRunner
 {
@@ -21,13 +21,11 @@ class WhoopsRunner
         
         ob_start();
         $whoops->$method($error);
-        $response = ob_get_clean();
+        $content = ob_get_clean();
 
-        return new HtmlResponse(
-            $response,
-            500,
-            ['Content-Type' => $format->getPreferredContentType()]
-        );
+        return Factory::createResponse(500)
+            ->withBody(Factory::createStream($content))
+            ->withHeader('Content-Type', $format->getPreferredContentType());
     }
 
     private static function getWhoopsInstance(Formats\Format $format)
