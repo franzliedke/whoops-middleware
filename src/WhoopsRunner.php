@@ -2,10 +2,10 @@
 
 namespace Franzl\Middleware\Whoops;
 
+use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ServerRequestInterface;
 use Whoops\Handler\PlainTextHandler;
 use Whoops\Run;
-use Zend\Diactoros\Response\HtmlResponse;
 
 class WhoopsRunner
 {
@@ -18,7 +18,7 @@ class WhoopsRunner
 
         // Output is managed by the middleware pipeline
         $whoops->allowQuit(false);
-        
+
         ob_start();
         $whoops->$method($error);
         $response = ob_get_clean();

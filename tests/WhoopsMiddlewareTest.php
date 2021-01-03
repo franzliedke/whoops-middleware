@@ -4,12 +4,12 @@ namespace Franzl\Middleware\Whoops\Test;
 
 use Exception;
 use Franzl\Middleware\Whoops\WhoopsMiddleware;
+use Laminas\Diactoros\Response\TextResponse;
+use Laminas\Diactoros\ServerRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response\TextResponse;
-use Zend\Diactoros\ServerRequest;
 
 class WhoopsMiddlewareTest extends TestCase
 {
